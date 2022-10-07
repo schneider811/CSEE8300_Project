@@ -15,6 +15,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: checkout lfs object
+      run: git lfs checkout
     - name: Build test
       uses: pguyot/arm-runner-action@v2.4.0
       id: Build-Python-exe
@@ -30,7 +32,6 @@ jobs:
             cd /home/pi/
             ls -a
             cd CSEE8300_Project/exampleCode
-            git lfs checkout
             pyinstaller algo_VTCN.py --clean --onefile 
             ls -a
     - run: echo "${{ steps.build-python-exe.outputs.image }}"
