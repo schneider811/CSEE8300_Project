@@ -35,7 +35,7 @@ jobs:
             cd /home/pi/
             ls -a
             cd CSEE8300_Project/exampleCode
-            pyinstaller algo_VTCN.py --clean --onefile 
+            pyinstaller --clean --onefile algo_VTCN.py
             ls -a
     - run: echo "${{ steps.build-python-exe.outputs.image }}"
     # - uses: actions/upload-artifact@v3
