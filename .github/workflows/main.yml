@@ -46,8 +46,8 @@ jobs:
     - name: Upload the image artifact
       uses: actions/upload-artifact@v2
       with:
-        name: ${{ steps.Build-Python-exe.outputs.image }}.img.xz
-        path: ${{ steps.Build-Python-exe.outputs.image }}.img.xz
+        name: ${{ steps.Build-Python-exe.outputs.image }}.xz
+        path: ${{ steps.Build-Python-exe.outputs.image }}.xz
         if-no-files-found: error
         retention-days: 10
     # - uses: actions/upload-artifact@v3
