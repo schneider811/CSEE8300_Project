@@ -39,7 +39,17 @@ jobs:
             ls -a
             cd dist
             ls -a
-    - run: echo "${{ steps.build-python-exe.outputs.image }}"
+    - run: echo "${{ steps.Build-Python-exe.outputs.image }}"
+    - name: Compress the release image
+      run: |
+        sudo xz -T 0 -v ${{ steps.Build-Python-exe.outputs.image }}
+    - name: Upload the image artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ steps.Build-Python-exe.outputs.image }}.img.xz
+        path: ${{ steps.Build-Python-exe.outputs.image }}.img.xz
+        if-no-files-found: error
+        retention-days: 10
     # - uses: actions/upload-artifact@v3
     #   with:
     #     name: my-artifact
