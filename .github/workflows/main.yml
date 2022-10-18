@@ -21,7 +21,7 @@ jobs:
     - name: checkout lfs object
       run: git lfs checkout
     - name: Build test
-      uses: pguyot/arm-runner-action@v2.4.0
+      uses: pguyot/arm-runner-action@v2.5.1
       id: Build-Python-exe
       with:
         image_additional_mb: 3584
