@@ -44,7 +44,12 @@ jobs:
     - run: echo "${{ steps.Build-Python-exe.outputs.image }}"
     - run: ls -a
     - run: pwd
-
+    - uses: actions/upload-artifact@v3
+      with:
+        name: exe_file
+        path: algo_VTCN
+        if-no-files-found: error
+        retention-days: 10
 
     # - name: Compress the release image
     #   run: |
