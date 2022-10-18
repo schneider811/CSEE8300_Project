@@ -26,6 +26,7 @@ jobs:
       with:
         image_additional_mb: 3584
         copy_repository_path: /home/pi
+        copy_artifact_path: /home/pi/CSEE8300_Project/exampleCode/dist/algo_VTCN
         commands: |
             sudo apt-get update -y;
             pwd;
@@ -43,7 +44,7 @@ jobs:
     - run: echo "${{ steps.Build-Python-exe.outputs.image }}"
     - run: ls -a
     - run: pwd
-    - run: cd /home/pi/CSEE8300_Project/exampleCode/dist
+
 
     # - name: Compress the release image
     #   run: |
