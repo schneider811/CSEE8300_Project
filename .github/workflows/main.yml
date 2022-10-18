@@ -26,7 +26,7 @@ jobs:
       with:
         image_additional_mb: 3584
         copy_repository_path: /home/pi
-        copy_artifact_path: /home/pi/CSEE8300_Project/exampleCode/dist/algo_VTCN
+        copy_artifact_path: CSEE8300_Project/exampleCode/dist/algo_VTCN
         commands: |
             sudo apt-get update -y;
             pwd;
