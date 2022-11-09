@@ -27,6 +27,7 @@ jobs:
         image_additional_mb: 3584
         copy_repository_path: /home/pi
         copy_artifact_path: CSEE8300_Project/exampleCode/dist/algo_VTCN
+        base_image: raspios_lite_arm64:latest
         commands: |
             sudo apt-get update -y;
             pwd;
@@ -34,7 +35,6 @@ jobs:
             sudo pip3 install --upgrade pip;
             sudo pip3 install torch==1.8.1+cpu torchvision==0.9.1+cpu torchaudio==0.8.1 -f https://download.pytorch.org/whl/torch_stable.html
             sudo pip3 install numpy
-            sudo pip3 install nvidia-ml-py3
             sudo pip3 install -U scikit-learn
             sudo pip3 install pyinstaller;
             cd /home/pi/;
@@ -55,17 +55,17 @@ jobs:
         if-no-files-found: error
         retention-days: 10
 
-    # - name: Compress the release image
-    #   run: |
-    #     sudo xz -T 0 -v ${{ steps.Build-Python-exe.outputs.image }}
-    # - name: Upload the image artifact
-    #   uses: actions/upload-artifact@v2
-    #   with:
-    #     name: build_image
-    #     path: ${{ steps.Build-Python-exe.outputs.image }}.xz
-    #     if-no-files-found: error
-    #     retention-days: 10
-    # - uses: actions/upload-artifact@v3
-    #   with:
-    #     name: my-artifact
-    #     path: 
+    - name: Compress the release image
+      run: |
+        sudo xz -T 0 -v ${{ steps.Build-Python-exe.outputs.image }}
+    - name: Upload the image artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: build_image
+        path: ${{ steps.Build-Python-exe.outputs.image }}.xz
+        if-no-files-found: error
+        retention-days: 10
+    - uses: actions/upload-artifact@v3
+      with:
+        name: my-artifact
+        path: 
