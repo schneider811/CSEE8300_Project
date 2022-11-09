@@ -38,6 +38,7 @@ jobs:
             sudo pip3 install -U scikit-learn;
             sudo pip3 install -U matplotlib;
             sudo pip3 install pyinstaller;
+            sudo pip3 install nvidia-ml-py3
             cd /home/pi/;
             ls -a;
             cd CSEE8300_Project/exampleCode;
