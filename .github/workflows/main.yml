@@ -16,10 +16,6 @@ jobs:
     steps:
     - name: Checkout repo
       uses: actions/checkout@v2
-      with:
-        lfs: true
-    - name: checkout lfs object
-      run: git lfs checkout
     - name: Build test
       uses: pguyot/arm-runner-action@v2.5.1
       id: Build-Python-exe
