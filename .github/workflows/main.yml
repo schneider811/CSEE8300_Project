@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repo
@@ -52,6 +52,22 @@ jobs:
         path: algo_VTCN
         if-no-files-found: error
         retention-days: 11
+
+  upload:
+    runs-on: self-hosted
+    steps: 
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - uses: actions/download-artifact@v3
+        with:
+          name: exe_file
+      - run: |
+        cd exe_file
+        scp algo_VTCN pi@192.168.0.67
+        ssh pi@192.168.0.67 
+        chmod +x exe_file
+        ./exe_file
+
 
     # - name: Compress the release image
     #   run: |
