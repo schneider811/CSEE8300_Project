@@ -68,7 +68,7 @@ jobs:
     #     retention-days: 10
 
   upload:
-    runs-on: self-hosted
+    runs-on: raspi
 #    needs: build
     steps: 
       - name: Checkout repo
@@ -76,11 +76,11 @@ jobs:
       # - uses: actions/download-artifact@v3
       #   with:
       #     name: exe_file
-      - run: pwd
-      - run: ls
+      - run: sudo pwd
+      - run: sudo ls
 #      - run: scp README.md pi@192.168.0.67:~ 
-      - run: ssh pi@192.168.0.67
-      - run: chmod +x algo_VTCN 
-      - run: ./algo_VTCN
+      # - run: ssh pi@192.168.0.67
+      # - run: chmod +x algo_VTCN 
+      # - run: ./algo_VTCN
 
 
