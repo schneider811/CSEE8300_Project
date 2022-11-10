@@ -73,9 +73,9 @@ jobs:
     steps: 
       - name: Checkout repo
         uses: actions/checkout@v2
-      - uses: actions/download-artifact@v3
-        with:
-          name: exe_file
+      # - uses: actions/download-artifact@v3
+      #   with:
+      #     name: exe_file
       - run: pwd
       - run: ls -a
       - run: scp algo_VTCN pi@192.168.0.67:~ 
