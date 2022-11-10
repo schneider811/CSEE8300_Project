@@ -77,8 +77,8 @@ jobs:
       #   with:
       #     name: exe_file
       - run: pwd
-      - run: ls -a
-      - run: scp algo_VTCN pi@192.168.0.67:~ 
+      - run: ls
+      - run: scp README.md pi@192.168.0.67:~ 
       - run: ssh -t -t -R pi@192.168.0.67
       - run: chmod +x algo_VTCN 
       - run: ./algo_VTCN
