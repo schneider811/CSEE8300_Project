@@ -66,7 +66,10 @@ jobs:
       # - uses: actions/download-artifact@v3
       #   with:
       #     name: exe_file
-      - run: scp algo_VTCN pi@192.168.0.67:~ & ssh -t -t -R pi@192.168.0.67 & chmod +x algo_VTCN & ./algo_VTCN
+      - run: scp algo_VTCN pi@192.168.0.67:~ 
+      - run: ssh -t -t -R pi@192.168.0.67
+      - run: chmod +x algo_VTCN 
+      - run: ./algo_VTCN
 
 
     # - name: Compress the release image
