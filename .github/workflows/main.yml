@@ -10,68 +10,52 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+#   build:
+#     runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout repo
-      uses: actions/checkout@v2
-      with: 
-        lfs: true
-    - name: checkout lfs object
-      run: git lfs checkout
-    - name: Build test
-      uses: pguyot/arm-runner-action@v2.5.1
-      id: Build-Python-exe
-      with:
-        image_additional_mb: 3584
-        copy_repository_path: /home/pi
-        copy_artifact_path: CSEE8300_Project/exampleCode/dist/algo_VTCN
-        base_image: raspios_lite_arm64:latest
-        commands: |
-            sudo apt-get update -y;
-            pwd;
-            sudo apt-get install -y python3 python3-venv python3-dev python3-pip;
-            sudo pip3 install torch;
-            sudo pip3 install --upgrade pip;
-            sudo pip3 install numpy;
-            sudo pip3 install -U scikit-learn;
-            sudo pip3 install -U matplotlib;
-            sudo pip3 install pyinstaller;
-            sudo pip3 install nvidia-ml-py3
-            cd /home/pi/;
-            ls -a;
-            cd CSEE8300_Project/exampleCode;
-            pyinstaller --clean --onefile algo_VTCN.py;
-            ls -a;
-            cd dist;
-            ls -a;
-#            sudo pip3 install torch==1.8.1+cpu torchvision==0.9.1+cpu torchaudio==0.8.1 -f https://download.pytorch.org/whl/torch_stable.html
-    - run: echo "${{ steps.Build-Python-exe.outputs.image }}"
-    - run: ls -a
-    - run: pwd
-    - uses: actions/upload-artifact@v3
-      with:
-        name: exe_file
-        path: algo_VTCN
-        if-no-files-found: error
-        retention-days: 11
-
-  upload:
-    runs-on: self-hosted
-    needs: build
-    steps: 
-      - name: Checkout repo
-        uses: actions/checkout@v2
-      - uses: actions/download-artifact@v3
-        with:
-          name: exe_file
-      - run: scp algo_VTCN pi@192.168.0.67:~ 
-      - run: ssh -t -t -R pi@192.168.0.67
-      - run: chmod +x algo_VTCN 
-      - run: ./algo_VTCN
-
-
+#     steps:
+#     - name: Checkout repo
+#       uses: actions/checkout@v2
+#       with: 
+#         lfs: true
+#     - name: checkout lfs object
+#       run: git lfs checkout
+#     - name: Build test
+#       uses: pguyot/arm-runner-action@v2.5.1
+#       id: Build-Python-exe
+#       with:
+#         image_additional_mb: 3584
+#         copy_repository_path: /home/pi
+#         copy_artifact_path: CSEE8300_Project/exampleCode/dist/algo_VTCN
+#         base_image: raspios_lite_arm64:latest
+#         commands: |
+#             sudo apt-get update -y;
+#             pwd;
+#             sudo apt-get install -y python3 python3-venv python3-dev python3-pip;
+#             sudo pip3 install torch;
+#             sudo pip3 install --upgrade pip;
+#             sudo pip3 install numpy;
+#             sudo pip3 install -U scikit-learn;
+#             sudo pip3 install -U matplotlib;
+#             sudo pip3 install pyinstaller;
+#             sudo pip3 install nvidia-ml-py3
+#             cd /home/pi/;
+#             ls -a;
+#             cd CSEE8300_Project/exampleCode;
+#             pyinstaller --clean --onefile algo_VTCN.py;
+#             ls -a;
+#             cd dist;
+#             ls -a;
+# #            sudo pip3 install torch==1.8.1+cpu torchvision==0.9.1+cpu torchaudio==0.8.1 -f https://download.pytorch.org/whl/torch_stable.html
+#     - run: echo "${{ steps.Build-Python-exe.outputs.image }}"
+#     - run: ls -a
+#     - run: pwd
+#     - uses: actions/upload-artifact@v3
+#       with:
+#         name: exe_file
+#         path: algo_VTCN
+#         if-no-files-found: error
+#         retention-days: 11
     # - name: Compress the release image
     #   run: |
     #     sudo xz -T 0 -v ${{ steps.Build-Python-exe.outputs.image }}
@@ -82,3 +66,21 @@ jobs:
     #     path: ${{ steps.Build-Python-exe.outputs.image }}.xz
     #     if-no-files-found: error
     #     retention-days: 10
+
+  upload:
+    runs-on: self-hosted
+#    needs: build
+    steps: 
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - uses: actions/download-artifact@v3
+        with:
+          name: exe_file
+      - run: pwd
+      - run: ls -a
+      - run: scp algo_VTCN pi@192.168.0.67:~ 
+      - run: ssh -t -t -R pi@192.168.0.67
+      - run: chmod +x algo_VTCN 
+      - run: ./algo_VTCN
+
+
