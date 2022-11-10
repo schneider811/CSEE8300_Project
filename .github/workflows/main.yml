@@ -60,13 +60,16 @@ jobs:
   upload:
     runs-on: self-hosted
     needs: build
+    env:
+      scp_cmd: "scp"
     steps: 
       - name: Checkout repo
         uses: actions/checkout@v2
       - uses: actions/download-artifact@v3
         with:
           name: exe_file
-      - run: scp algo_VTCN pi@192.168.0.67:
+      - run: |
+        scp algo_VTCN pi@192.168.0.67:
       - run: ssh pi@192.168.0.67 
       - run: chmod +x algo_VTCN
       - run: ./algo_VTCN
