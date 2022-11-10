@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
     - name: Checkout repo
@@ -51,7 +51,7 @@ jobs:
         name: exe_file
         path: algo_VTCN
         if-no-files-found: error
-        retention-days: 10
+        retention-days: 11
 
     # - name: Compress the release image
     #   run: |
