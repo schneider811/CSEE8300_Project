@@ -54,30 +54,30 @@ jobs:
         path: algo_VTCN
         if-no-files-found: error
         retention-days: 3
-    # - name: Compress the release image
-    #   run: |
-    #     sudo xz -T 0 -v ${{ steps.Build-Python-exe.outputs.image }}
-    # - name: Upload the image artifact
-    #   uses: actions/upload-artifact@v3
-    #   with:
-    #     name: build_image
-    #     path: ${{ steps.Build-Python-exe.outputs.image }}.xz
-    #     if-no-files-found: error
-    #     retention-days: 10
+    - name: Compress the release image
+      run: |
+        sudo xz -T 0 -v ${{ steps.Build-Python-exe.outputs.image }}
+    - name: Upload the image artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: build_image
+        path: ${{ steps.Build-Python-exe.outputs.image }}.xz
+        if-no-files-found: error
+        retention-days: 10
 
-  upload:
-    runs-on: raspi
-    needs: build
-    steps: 
-      - name: Checkout repo
-        uses: actions/checkout@v2
-      - uses: actions/download-artifact@v3
-        with:
-          name: exe_file
-      - run: cp algo_VTCN /home/pi/
-      - run: cd /home/pi
-      - run: chmod +x algo_VTCN
-      - run: ./algo_VTCN
+  # upload:
+  #   runs-on: raspi
+  #   needs: build
+  #   steps: 
+  #     - name: Checkout repo
+  #       uses: actions/checkout@v2
+  #     - uses: actions/download-artifact@v3
+  #       with:
+  #         name: exe_file
+  #     - run: cp algo_VTCN /home/pi/
+  #     - run: cd /home/pi
+  #     - run: chmod +x algo_VTCN
+  #     - run: ./algo_VTCN
 #      - run: scp README.md pi@192.168.0.67:~ 
       # - run: ssh pi@192.168.0.67
       # - run: chmod +x algo_VTCN 
