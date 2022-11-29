@@ -1,6 +1,6 @@
 torch
-numpy --upgrade
--U scikit-learn
--U matplotlib
+numpy
+scikit-learn
+matplotlib
 pyinstaller
 nvidia-ml-py3
