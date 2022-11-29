@@ -1,5 +1,3 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
 on:
@@ -8,37 +6,48 @@ on:
   pull_request:
     branches: [ "main" ]
   workflow_dispatch:
+env:
+  file_to_build: algo_VTCN.py #file you want to build
+  pi_image: raspios_lite_arm64:latest #image you want to use need 64 bit image for pytorch
+  path_to_file: CSEE8300_Project/exampleCode #folder that $file_to_build is in
+  built_file_name: algo_VTCN #name of the built file
+
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v2
+    - name: Checkout repo #checkout code so most up-to-date version is accessible to the runner
+      uses: actions/checkout@main
       with: 
-        lfs: true
+        lfs: true #lfs is github large file storage system
     - name: checkout lfs object
       run: git lfs checkout
     - name: Build test
-      uses: pguyot/arm-runner-action@v2.5.1
+      uses: pguyot/arm-runner-action@main #this action emulates an ARM CPU and a desired operating system $pi_image
       id: Build-Python-exe
       with:
         image_additional_mb: 3584
         copy_repository_path: /home/pi
-        copy_artifact_path: CSEE8300_Project/exampleCode/dist/algo_VTCN
-        base_image: raspios_lite_arm64:latest
+        copy_artifact_path: ${{env.path_to_file}}/dist/${{env.built_file_name}}
+        base_image: ${{env.pi_image}}
         commands: |
             sudo apt-get update -y;
             pwd;
-            apt-get install -y python3 python3-venv python3-dev python3-pip;
-            cd CSEE8300_Project/ ;
-            pip3 install -r requirements;
-            cd exampleCode;
-            pyinstaller --clean --onefile algo_VTCN.py;
-    - uses: actions/upload-artifact@v3
+            apt-get install -y python3 python3-venv python3-dev python3-pip; 
+            cd ${{env.path_to_file}};
+            pip3 install torch;
+            pip3 install --upgrade pip;
+            pip3 install numpy --upgrade;
+            pip3 install -U scikit-learn;
+            pip3 install -U matplotlib;
+            pip3 install pyinstaller;
+            pip3 install nvidia-ml-py3
+            pyinstaller --clean --onefile ${{env.file_to_build}};
+    - uses: actions/upload-artifact@main
       with:
         name: exe_file
-        path: algo_VTCN
+        path: ${{env.built_file_name}}
         if-no-files-found: error
         retention-days: 3
 
@@ -68,14 +77,14 @@ jobs:
     needs: build
     steps: 
       - name: Checkout repo
-        uses: actions/checkout@v2
-      - uses: actions/download-artifact@v3
+        uses: actions/checkout@main
+      - uses: actions/download-artifact@main
         with:
           name: exe_file
-      - run: cp algo_VTCN /home/pi/
+      - run: cp ${{env.built_file_name}} /home/pi/
       - run: cd /home/pi
-      - run: chmod +x algo_VTCN
-      - run: ./algo_VTCN --label_name=S --dropout=0.1 --train=10min_train.npy --test=10min_test.npy
+      - run: chmod +x ${{env.built_file_name}}
+      - run: ./${{env.built_file_name}} --label_name=S --dropout=0.1 --train=10min_train.npy --test=10min_test.npy
       # - run: chmod +x algo_VTCN
       # - run: ./algo_VTCN --label_name=S --dropout=0.1 --train=10min_train.npy --test=10min_test.npy
     #  - run: scp README.md pi@192.168.0.67:~ 
