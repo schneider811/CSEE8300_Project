@@ -22,7 +22,7 @@ jobs:
       with: 
         lfs: true #lfs is github large file storage system
     - name: checkout lfs object
-      run: git lfs checkout
+      run: git lfs checkout 
     - name: Build test
       uses: pguyot/arm-runner-action@main #this action emulates an ARM CPU and a desired operating system $pi_image
       id: Build-Python-exe
