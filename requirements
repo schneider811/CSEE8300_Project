@@ -1,5 +1,4 @@
 torch
---upgrade pip
 numpy --upgrade
 -U scikit-learn
 -U matplotlib
