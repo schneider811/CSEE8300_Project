@@ -1,5 +1,5 @@
 # CSEE8300_Project
-Automatically Building Executable Files for RaspberryPi with pyinstaller
+Automatically Building Executable Files from python programs for RaspberryPi with pyinstaller
 
 
 Using this repository as a guide to build executable files is pretty simple. Navigate to .github/workflows/main.yml and add this file to your repository (it needs to have the same path as well)
