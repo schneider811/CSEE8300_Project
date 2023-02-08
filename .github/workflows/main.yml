@@ -30,7 +30,7 @@ jobs:
         image_additional_mb: 3584
         copy_repository_path: /home/pi
         copy_artifact_path: ${{env.path_to_file}}/dist/${{env.built_file_name}}
-        base_image: ${{env.pi_image}}
+        base_image: ${{env.pi_image}} #defined in line 11. Lines 34 - 46 does the bulk of the work to build the executable file and the image. to build the executable you need to install all packages you will be using and then use pyinstaller to create the .exe. If you use the image that this yml uploads all of the packages will be present as well as the built file.
         commands: |
             sudo apt-get update -y;
             pwd;
@@ -51,30 +51,19 @@ jobs:
         if-no-files-found: error
         retention-days: 3
 
-    # including lines 55-64 will also upload the entire image if you wish to image the raspberry pi with all of the packages and files pre-installed
-    # - name: Compress the release image
-    #   run: |
-    #     sudo xz -T 0 -v ${{ steps.Build-Python-exe.outputs.image }}
-    # - name: Upload the image artifact
-    #   uses: actions/upload-artifact@v3
-    #   with:
-    #     name: build_image
-    #     path: ${{ steps.Build-Python-exe.outputs.image }}.xz
-    #     if-no-files-found: error
-    #     retention-days: 10
-
-  upload:
-    runs-on: raspi
-    needs: build
-    steps: 
-      - name: Checkout repo
-        uses: actions/checkout@main
-      - uses: actions/download-artifact@main
-        with:
-          name: exe_file
-      - run: cp ${{env.built_file_name}} /home/pi/
-      - run: cd /home/pi
-      - run: chmod +x ${{env.built_file_name}}
-      # - run: ./${{env.built_file_name}} --label_name=S --dropout=0.1 --train=10min_train.npy --test=10min_test.npy due to the large file size of the example training and test data
-      # they cannot be added to the repository therefore it errors out when this tries to run. Fear not! simply ssh into the machine and run the code it should work just fine
+# Lines 55-68 can be used to also upload the .exe file automatically to the raspberry pi if you install the raspberry pi as a github runner. Having the raspberry pi as a runner can create some security risks though. If it is used the repository must be private. Additionally this will only work for one raspberry pi - there are solutions where you could upload to multiple raspberry pi's at once but they would be difficult to implement. One solution could be a matrix job and having the github server to ssh into each raspberry pi
+  # upload:
+  #   runs-on: raspi
+  #   needs: build
+  #   steps: 
+  #     - name: Checkout repo
+  #       uses: actions/checkout@main
+  #     - uses: actions/download-artifact@main
+  #       with:
+  #         name: exe_file
+  #     - run: cp ${{env.built_file_name}} /home/pi/
+  #     - run: cd /home/pi
+  #     - run: chmod +x ${{env.built_file_name}}
+  #     # - run: ./${{env.built_file_name}} --label_name=S --dropout=0.1 --train=10min_train.npy --test=10min_test.npy due to the large file size of the example training and test data
+  #     # they cannot be added to the repository therefore it errors out when this tries to run. Fear not! simply ssh into the machine and run the code it should work just fine
 

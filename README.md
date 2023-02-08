@@ -2,7 +2,25 @@
 Automatically Building Executable Files from python programs for RaspberryPi with pyinstaller
 
 
-Using this repository as a guide to build executable files is pretty simple. Navigate to .github/workflows/main.yml and add this file to your repository (it needs to have the same path as well)
+In order to build executable files in an automated manner some form of a Continuous integration/Continuous Development (CICD) tool would provide immeasurable support. One such tool was added to github not that long ago and it is Github actions.
+
+GitHub Actions is a continuous integration and continuous delivery (CI/CD) platform that allows you to automate your build, test, and deployment pipeline. You can create workflows that build and test every pull request to your repository, or deploy merged pull requests to production.
+
+GitHub Actions goes beyond just DevOps and lets you run workflows when other events happen in your repository. For example, you can run a workflow to automatically add the appropriate labels whenever someone creates a new issue in your repository.
+
+GitHub provides Linux, Windows, and macOS virtual machines to run your workflows, or you can host your own self-hosted runners in your own data center or cloud infrastructure.
+
+Using this repository as a guide to build executable files is pretty simple. Navigate to .github/workflows/ (your workflows need to be uploaded to this folder path in your repository) .In this folder there are three different .yml files. The first .yml file is a 'hello.yml' this is a simple test that will create a 'hello world' executable and upload it to a raspberry pi. This can be used for testing purposes if you choose to create a self-hosted runner with your raspberry pi.
+
+The main yml files to build the desired file or image are image.yml and main.yml. 
+
+The image.yml file will create the desired raspberry pi image defined in line 11, install the packages you define in the commands starting at line 34 and then compress and upload the image to github. You can then download that image and using raspi imager install the image with all files from the repository including the built executable.
+
+The lines the user may need to edit in image.yml are 10, 11, 12, 13, 34-46
+
+main.yml will take one specific file defined at line 10 by the user and create an executable whose name is defined at line 13 by the user. When a new update to the respository is pushed by the user this workflow will automatically run and create just the desired executable file and upload it to github. The file will be accessible in the 'actions' tab of the repository under the most recent job that ran.
+
+I would copy and past both the image.yml and main.yml files into your repository (keep the same path .github\workflows\xxxx.yml)
 
 Once you have copied the file and its contents simply edit them as needed for your project.
 
@@ -67,9 +85,12 @@ jobs:
         retention-days: 3
 ```
 
-This is jobs section and it defines what you want the runner to do when the events above happen. If you have edited the environment variables at the top of the file as suggested the only thing you need to edit here are the packages that need to be installed to build the program. Please note that pyinstaller is required to be installed for the program to be built. This job is specifically building a raspberry pi image with python3 installed as well as all of the packages installed. The upload-artifact section is grabbing the specific file we wanted built and uploading it to github.
+This is jobs section and it defines what you want the runner to do when the events above happen. you can think of all of these commands as if you are running the commands on a raspberry pi - that is because you are essentially doing just that. The pguyot/arm-runner-action@main is using QEMU to emulate an ARM CPU and the desired raspios and is able to create a working program with pyinstaller because it emulates both the CPU and OS.
 
-Finding the packages compatible with raspberry pi is likely what will cause the most problems with building the program. For instance the default Pi OS is 32 bit and pytorch will not run on a 32 bit operating system and the error codes given does not make it immediately obvious what the error is so some trial and error is required. Some tips: stack overflow is your friend adding the flags to some of these installs was done at the suggestion of posts I found on stack overflow and without these flags they would not install. Also, ensure the package is compatible with the desired operating system.
+
+ If you have edited the environment variables at the top of the file as suggested the only thing you need to edit here are the packages that need to be installed to build the program. Please note that pyinstaller is required to be installed for the program to be built. This job is specifically building a raspberry pi image with python3 installed as well as all of the packages installed. The upload-artifact section is grabbing the specific file we wanted built and uploading it to github.
+
+Finding the packages compatible with raspberry pi is likely what will cause the most problems with building the program. For instance the default Pi OS is 32 bit and pytorch will not run on a 32 bit operating system and the error codes given does not make it immediately obvious what the error is so some trial and error is required. Some tips: stack overflow is your friend adding the flags to some of these installs was done at the suggestion of posts I found on stack overflow and without these flags they would not install properly. Also, ensure the package is compatible with the desired operating system.
 
 ```yaml
      - name: Compress the release image
@@ -84,7 +105,7 @@ Finding the packages compatible with raspberry pi is likely what will cause the 
          retention-days: 10
 ```
 
-Include these lines if you would also like the build image to be uploaded to github once the job has been completed. This can be very useful if you have many devices you wish to run the program or that all require python and specific packages added to them.
+These lines are included in the image.yml and are included to upload the build image to github once the job has been completed. This can be very useful if you have many devices you wish to run the program or that all require python and specific packages added to them. You can just download the .img.xz file - unzip the file and use raspi imager to image your SD cards and have all the files and repository in the starting image of the raspberry pi.
 
 
 ```yaml
